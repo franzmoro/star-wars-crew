@@ -23,7 +23,8 @@
     "react/jsx-filename-extension": ["error", {
       "extensions": [".js", ".jsx"]
     }],
-    "react/forbid-prop-types": [0, { "forbid": ["any"] }]
+    "react/forbid-prop-types": [0, { "forbid": ["any"] }],
+    "react/no-array-index-key": [0]
   },
   "env": {
     "browser": true,

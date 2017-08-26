@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import Spinner from 'react-loader';
-
 import Character from './Character';
 import * as globalSelectors from '../../app/index.selectors';
 import * as charactersActionCreators from '../index.actionCreators';
 import * as preferencesActionCreators from '../../preferences/index.actionCreators';
-import { sortCharacters } from '../../_utility/formatting.utils';
+import { sortCharacters, sortByFavourites } from '../../_utility/formatting.utils';
 import {
   SORTING_DIMENSIONS,
   SORTING_ORDERS,
@@ -18,6 +17,7 @@ import {
 class CharactersList extends Component {
   constructor() {
     super();
+    this.getSortingIconClassName = this.getSortingIconClassName.bind(this);
     this.rearrangeCharacters = this.rearrangeCharacters.bind(this);
   }
 
@@ -33,6 +33,24 @@ class CharactersList extends Component {
     }
   }
 
+  getSortingIconClassName(headerName) {
+    const { sortingDimension, sortingOrder } = this.props;
+
+    const isCurrentDimension = sortingDimension === SORTING_DIMENSIONS[headerName];
+    const isSortingByFavourites = sortingDimension === SORTING_DIMENSIONS.Favourite;
+    const isAscendingOrder = sortingOrder === SORTING_ORDERS.ascending;
+
+    if (isSortingByFavourites && headerName === 'Favourite') {
+      return 'glyphicon glyphicon-triangle-bottom';
+    }
+    if (isCurrentDimension) {
+      return isAscendingOrder
+        ? 'glyphicon glyphicon-triangle-top'
+        : 'glyphicon glyphicon-triangle-bottom';
+    }
+    return 'glyphicon glyphicon-triangle-top';
+  }
+
   rearrangeCharacters(dimension, isCurrentlyAscending) {
     const { setSortingOrder, setSortingDimension } = this.props;
     const newSortingOrder = isCurrentlyAscending ? 'descending' : 'ascending';
@@ -42,20 +60,25 @@ class CharactersList extends Component {
   }
 
   render() {
-    // TODO refresh button
     // TODO modal for expanded character info
-    // TODO Favorite character filter??
     const {
       characters,
-      // favouriteCharacterIds,
+      favouriteCharacterIds,
       isLoading,
       loadingError,
+      addToFavourites,
+      removeFromFavourites,
       // expandedCharacterId,
       sortingDimension,
       sortingOrder,
     } = this.props;
 
-    const sortedCharacterIds = sortCharacters(characters, sortingDimension, sortingOrder);
+    const isSortingByFavourites = (sortingDimension === SORTING_DIMENSIONS.Favourite);
+    const sortedCharacterIds = isSortingByFavourites
+      ? sortByFavourites(characters, favouriteCharacterIds)
+      : sortCharacters(characters, sortingDimension, sortingOrder);
+
+    sortCharacters(characters, sortingDimension, sortingOrder, favouriteCharacterIds);
     const isAscendingOrder = sortingOrder === SORTING_ORDERS.ascending;
 
     const showTable = Boolean(sortedCharacterIds.length);
@@ -73,43 +96,37 @@ class CharactersList extends Component {
           : (showTable &&
             <Table striped bordered condensed hover>
               <thead>
-                <tr>{
-                  HEADER_NAMES.map((headerName, index) => {
-                    const isCurrentDimension = sortingDimension === SORTING_DIMENSIONS[headerName];
-                    let className;
-
-                    if (isCurrentDimension) {
-                      className = isAscendingOrder
-                        ? 'glyphicon glyphicon-triangle-top'
-                        : 'glyphicon glyphicon-triangle-bottom';
-                    } else {
-                      className = 'glyphicon glyphicon-triangle-top';
-                    }
-
-                    return (
-                      <th key={`header-item-${headerName}`}>
-                        {headerName}
-                        <span
-                          role="menuitem"
-                          tabIndex={index + 1}
-                          className={className}
-                          onKeyPress={(e) => {
-                            if (e.keyCode === 13) {
-                              this.rearrangeCharacters(headerName, isAscendingOrder);
-                            }
-                          }}
-                          onClick={() => this.rearrangeCharacters(headerName, isAscendingOrder)}
-                        />
-                      </th>
-                    );
-                  })
-                }
+                <tr>
+                  {HEADER_NAMES.map((headerName, index) => (
+                    <th key={`header-item-${headerName}`}>
+                      {headerName}
+                      <span
+                        role="menuitem"
+                        tabIndex={index + 1}
+                        className={this.getSortingIconClassName(headerName)}
+                        onKeyPress={() => this.rearrangeCharacters(headerName, isAscendingOrder)}
+                        onClick={() => this.rearrangeCharacters(headerName, isAscendingOrder)}
+                      />
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {sortedCharacterIds.map((characterId) => {
+                {sortedCharacterIds.map((characterId, index) => {
                   const character = characters[characterId];
-                  return <Character key={characterId} {...character} />;
+                  const isFavourited = favouriteCharacterIds.includes(characterId);
+
+                  return (
+                    <Character
+                      key={`character-${characterId}`}
+                      index={index}
+                      characterId={characterId}
+                      isFavourited={isFavourited}
+                      onAddToFavourites={addToFavourites}
+                      onRemoveFromFavourites={removeFromFavourites}
+                      {...character}
+                    />
+                  );
                 })}
               </tbody>
             </Table>
@@ -129,6 +146,9 @@ CharactersList.propTypes = {
   retrieveCharacters: PropTypes.func.isRequired,
   sortingDimension: PropTypes.string.isRequired,
   sortingOrder: PropTypes.string.isRequired,
+
+  addToFavourites: PropTypes.func.isRequired,
+  removeFromFavourites: PropTypes.func.isRequired,
   setSortingDimension: PropTypes.func.isRequired,
   setSortingOrder: PropTypes.func.isRequired,
 };
@@ -150,6 +170,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   retrieveCharacters: () => dispatch(charactersActionCreators.retrieveCharacters()),
+  addToFavourites: order => dispatch(charactersActionCreators.addToFavourites(order)),
+  removeFromFavourites: order => dispatch(charactersActionCreators.removeFromFavourites(order)),
+
   setSortingDimension: dimension => dispatch(preferencesActionCreators.setSortingDimension(dimension)),
   setSortingOrder: order => dispatch(preferencesActionCreators.setSortingOrder(order)),
 });

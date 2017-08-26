@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Character = (props) => {
-  // TODO star if its a favorite
   const {
+    characterId,
+    isFavourited,
     name,
     gender,
     birthYear,
@@ -14,25 +15,54 @@ const Character = (props) => {
     skinColor,
     numFilms,
     numVehicles,
+    onAddToFavourites,
+    onRemoveFromFavourites,
   } = props;
+
+  const starClassName = isFavourited
+    ? 'glyphicon glyphicon-star'
+    : 'glyphicon glyphicon-star-empty';
+
+  const toggleFromFavourites = () => (
+    isFavourited ? onRemoveFromFavourites(characterId) : onAddToFavourites(characterId)
+  );
 
   return (
     <tr>
-      <td>{name}</td>
-      <td>{gender}</td>
-      <td>{birthYear}</td>
-      <td>{height}</td>
-      <td>{mass}</td>
-      <td>{eyeColor}</td>
-      <td>{hairColor}</td>
-      <td>{skinColor}</td>
-      <td>{numFilms}</td>
-      <td>{numVehicles}</td>
+      <td>{
+        <span
+          role="button"
+          tabIndex={0}
+          className={starClassName}
+          onKeyPress={toggleFromFavourites}
+          onClick={toggleFromFavourites}
+        />
+      }</td>
+      {
+        [
+          name,
+          gender,
+          birthYear,
+          height,
+          mass,
+          eyeColor,
+          hairColor,
+          skinColor,
+          numFilms,
+          numVehicles,
+        ].map((field, idx) => (
+          <td key={`${characterId}-${field}-${idx}`}>
+            {field}
+          </td>
+        ))
+      }
     </tr>
   );
 };
 
 Character.propTypes = {
+  characterId: PropTypes.string.isRequired,
+  isFavourited: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   gender: PropTypes.string.isRequired,
   birthYear: PropTypes.string.isRequired,
@@ -43,6 +73,8 @@ Character.propTypes = {
   skinColor: PropTypes.string.isRequired,
   numFilms: PropTypes.number.isRequired,
   numVehicles: PropTypes.number.isRequired,
+  onAddToFavourites: PropTypes.func.isRequired,
+  onRemoveFromFavourites: PropTypes.func.isRequired,
 };
 
 export default Character;

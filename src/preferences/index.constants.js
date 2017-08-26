@@ -3,6 +3,7 @@ export const SORTING_ORDERS = {
   descending: 'DES',
 };
 export const SORTING_DIMENSIONS = {
+  Favourite: 'favourite',
   Name: 'name',
   Gender: 'gender',
   'Birth Year': 'birthYear',
