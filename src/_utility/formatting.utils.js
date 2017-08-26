@@ -1,4 +1,4 @@
-import { SORTING_ORDERS } from '../preferences/index.constants';
+import { SORTING_ORDERS } from '../index.constants';
 
 export const convertedToNumberIfPossible = (string) => {
   const convertedNumber = Number(string);

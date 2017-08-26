@@ -7,7 +7,7 @@ export const INITIAL_STATE = {
   favouriteCharacterIds: [],
   isLoading: false,
   loadingError: undefined,
-  expandedCharacterId: undefined,
+  modalCharacterId: undefined,
 };
 
 
@@ -46,6 +46,12 @@ export default (state = INITIAL_STATE, action) => {
         favouriteCharacterIds: state.favouriteCharacterIds.filter(
           id => id !== action.payload
         ),
+      };
+
+    case actionTypes.TOGGLE_MODAL_STATUS:
+      return {
+        ...state,
+        modalCharacterId: action.payload,
       };
 
     default:

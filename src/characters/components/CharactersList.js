@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import Spinner from 'react-loader';
 import Character from './Character';
+import CharacterModal from './CharacterModal';
 import * as globalSelectors from '../../app/index.selectors';
 import * as charactersActionCreators from '../index.actionCreators';
 import * as preferencesActionCreators from '../../preferences/index.actionCreators';
@@ -12,7 +13,7 @@ import {
   SORTING_DIMENSIONS,
   SORTING_ORDERS,
   HEADER_NAMES,
-} from '../../preferences/index.constants';
+} from '../../index.constants';
 
 class CharactersList extends Component {
   constructor() {
@@ -60,17 +61,17 @@ class CharactersList extends Component {
   }
 
   render() {
-    // TODO modal for expanded character info
     const {
       characters,
       favouriteCharacterIds,
       isLoading,
       loadingError,
-      addToFavourites,
-      removeFromFavourites,
-      // expandedCharacterId,
+      modalCharacterId,
       sortingDimension,
       sortingOrder,
+      addToFavourites,
+      removeFromFavourites,
+      toggleModalStatus,
     } = this.props;
 
     const isSortingByFavourites = (sortingDimension === SORTING_DIMENSIONS.Favourite);
@@ -86,6 +87,15 @@ class CharactersList extends Component {
       <div>
         {isLoading && <p>Jumping to Hyperspace...</p>}
         <Spinner loaded={!isLoading} />
+        <CharacterModal
+          {...characters[modalCharacterId]}
+          isModalOpen={Boolean(modalCharacterId)}
+          characterId={modalCharacterId}
+          isFavourited={favouriteCharacterIds.includes(modalCharacterId)}
+          onDismissModal={() => toggleModalStatus()}
+          onAddToFavourites={() => addToFavourites(modalCharacterId)}
+          onRemoveFromFavourites={() => removeFromFavourites(modalCharacterId)}
+        />
         {loadingError
           ? (
             <div>
@@ -120,10 +130,10 @@ class CharactersList extends Component {
                     <Character
                       key={`character-${characterId}`}
                       index={index}
-                      characterId={characterId}
                       isFavourited={isFavourited}
-                      onAddToFavourites={addToFavourites}
-                      onRemoveFromFavourites={removeFromFavourites}
+                      onAddToFavourites={() => addToFavourites(characterId)}
+                      onRemoveFromFavourites={() => removeFromFavourites(characterId)}
+                      onOpenModal={() => toggleModalStatus(characterId)}
                       {...character}
                     />
                   );
@@ -142,7 +152,7 @@ CharactersList.propTypes = {
   favouriteCharacterIds: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   loadingError: PropTypes.string,
-  expandedCharacterId: PropTypes.number,
+  modalCharacterId: PropTypes.number,
   retrieveCharacters: PropTypes.func.isRequired,
   sortingDimension: PropTypes.string.isRequired,
   sortingOrder: PropTypes.string.isRequired,
@@ -151,11 +161,12 @@ CharactersList.propTypes = {
   removeFromFavourites: PropTypes.func.isRequired,
   setSortingDimension: PropTypes.func.isRequired,
   setSortingOrder: PropTypes.func.isRequired,
+  toggleModalStatus: PropTypes.func.isRequired,
 };
 
 CharactersList.defaultProps = {
   loadingError: undefined,
-  expandedCharacterId: undefined,
+  modalCharacterId: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -163,7 +174,7 @@ const mapStateToProps = state => ({
   favouriteCharacterIds: globalSelectors.getFavouriteCharacterIds(state),
   isLoading: globalSelectors.isLoadingCharacters(state),
   loadingError: globalSelectors.getLoadingError(state),
-  expandedCharacterId: globalSelectors.getExpandedCharacterId(state),
+  modalCharacterId: globalSelectors.getModalCharacterId(state),
   sortingDimension: globalSelectors.getSortingDimension(state),
   sortingOrder: globalSelectors.getSortingOrder(state),
 });
@@ -172,6 +183,7 @@ const mapDispatchToProps = dispatch => ({
   retrieveCharacters: () => dispatch(charactersActionCreators.retrieveCharacters()),
   addToFavourites: order => dispatch(charactersActionCreators.addToFavourites(order)),
   removeFromFavourites: order => dispatch(charactersActionCreators.removeFromFavourites(order)),
+  toggleModalStatus: characterId => dispatch(charactersActionCreators.toggleModalStatus(characterId)),
 
   setSortingDimension: dimension => dispatch(preferencesActionCreators.setSortingDimension(dimension)),
   setSortingOrder: order => dispatch(preferencesActionCreators.setSortingOrder(order)),

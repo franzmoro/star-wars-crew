@@ -45,5 +45,27 @@ describe('CHARACTERS REDUCER TESTS', () => {
         favouriteCharacterIds: startingState.favouriteCharacterIds.slice(0, -1),
       });
     });
+
+    it('should be able to open modal', () => {
+      const characterId = 57;
+      const action = createAction(
+        actionTypes.TOGGLE_MODAL_STATUS,
+        characterId
+      );
+      const actualState = charactersReducer(startingState, action);
+      expect(actualState).toEqual({
+        ...startingState,
+        modalCharacterId: characterId,
+      });
+    });
+
+    it('should be able to close modal', () => {
+      const action = createAction(actionTypes.TOGGLE_MODAL_STATUS);
+      const actualState = charactersReducer(startingState, action);
+      expect(actualState).toEqual({
+        ...startingState,
+        modalCharacterId: undefined,
+      });
+    });
   });
 });

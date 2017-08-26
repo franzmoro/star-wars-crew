@@ -13,3 +13,8 @@ export const removeFromFavourites = id => createAction(
   actionTypes.REMOVE_FROM_FAVOURITES,
   id
 );
+
+export const toggleModalStatus = characterId => createAction(
+  actionTypes.TOGGLE_MODAL_STATUS,
+  characterId
+);

@@ -3,4 +3,4 @@ export const getFavouriteCharacterIds = (localState = {}) => localState.favourit
 export const getSortedCharacterIds = (localState = {}) => localState.sortedCharacterIds;
 export const isLoadingCharacters = (localState = {}) => localState.isLoading;
 export const getLoadingError = (localState = {}) => localState.loadingError;
-export const getExpandedCharacterId = (localState = {}) => localState.expandedCharacterId;
+export const getModalCharacterId = (localState = {}) => localState.modalCharacterId;

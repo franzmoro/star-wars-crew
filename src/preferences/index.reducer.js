@@ -1,5 +1,5 @@
 import * as actionTypes from './index.actionTypes';
-import { SORTING_DIMENSIONS, SORTING_ORDERS } from './index.constants';
+import { SORTING_DIMENSIONS, SORTING_ORDERS } from '../index.constants';
 
 export const INITIAL_STATE = {
   sortingDimension: SORTING_DIMENSIONS.Name,

@@ -1,6 +1,6 @@
 import preferencesReducer, { INITIAL_STATE } from '../index.reducer';
 import * as actionTypes from '../index.actionTypes';
-import { SORTING_ORDERS, SORTING_DIMENSIONS } from '../index.constants';
+import { SORTING_ORDERS, SORTING_DIMENSIONS } from '../../index.constants';
 import { createAction } from '../../_utility/action.utils';
 
 describe('PREFERENCES REDUCER TESTS', () => {
