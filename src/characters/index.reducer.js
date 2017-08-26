@@ -1,14 +1,14 @@
 import * as actionTypes from './index.actionTypes';
 import * as actionUtils from '../_utility/action.utils';
 
-const INITIAL_STATE = {
-  infoObject: {},
-  sortedCharacterIds: [],
+export const INITIAL_STATE = {
+  characters: {},
   favouriteCharacterIds: [],
   isLoading: false,
   loadingError: undefined,
   expandedCharacterId: undefined,
 };
+
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -21,8 +21,7 @@ export default (state = INITIAL_STATE, action) => {
     case actionUtils.fulfilledAction(actionTypes.RETRIEVE_CHARACTERS):
       return {
         ...state,
-        infoObject: action.payload,
-        sortedCharacterIds: Object.keys(action.payload),
+        characters: action.payload,
         isLoading: false,
       };
     case actionUtils.rejectedAction(actionTypes.RETRIEVE_CHARACTERS):
@@ -31,8 +30,6 @@ export default (state = INITIAL_STATE, action) => {
         isLoading: false,
         loadingError: action.payload.message,
       };
-    // actionTypes.ADD_FAVOURITE
-    // actionTypes.REMOVE_FAVOURITE
 
     default:
       return state;

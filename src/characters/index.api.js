@@ -8,10 +8,11 @@ const personUrlToId = (url) => {
 };
 
 const mapCharacterFromApi = characterFromApi => ({
-  ...characterFromApi,
+  name: characterFromApi.name,
+  gender: characterFromApi.gender,
+  birthYear: characterFromApi.birth_year,
   height: convertedToNumberIfPossible(characterFromApi.height),
   mass: convertedToNumberIfPossible(characterFromApi.mass),
-  birthYear: characterFromApi.birth_year,
   eyeColor: characterFromApi.eye_color,
   hairColor: characterFromApi.hair_color,
   skinColor: characterFromApi.skin_color,
@@ -19,7 +20,7 @@ const mapCharacterFromApi = characterFromApi => ({
   numVehicles: characterFromApi.vehicles.length,
 });
 
-const arrayOfCharactersIntoObject = arrayOfCharacters => arrayOfCharacters
+export const arrayOfCharactersIntoObject = arrayOfCharacters => arrayOfCharacters
   .reduce(
     (infoObject, character) => {
       const characterId = personUrlToId(character.url);
@@ -28,7 +29,6 @@ const arrayOfCharactersIntoObject = arrayOfCharacters => arrayOfCharacters
     },
     {}
   );
-
 
 export const getCharacters = page => (
   axios.get(`${baseSWAPIUrl}/people/?page=${page}`)
@@ -39,7 +39,6 @@ export const getCharacters = page => (
       return data;
     })
 );
-
 
 export const getAllCharacters = (startingPage = 1, savedResults = []) => (
   getCharacters(startingPage)

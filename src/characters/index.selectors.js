@@ -1,4 +1,4 @@
-export const getCharacters = (localState = {}) => localState.infoObject;
+export const getCharacters = (localState = {}) => localState.characters;
 export const getFavouriteCharacterIds = (localState = {}) => localState.favouriteCharacterIds;
 export const getSortedCharacterIds = (localState = {}) => localState.sortedCharacterIds;
 export const isLoadingCharacters = (localState = {}) => localState.isLoading;
