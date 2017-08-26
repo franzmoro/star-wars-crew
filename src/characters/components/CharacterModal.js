@@ -23,8 +23,8 @@ const CharacterModal = (props) => {
           <FavouriteStar {...{ isFavourited, onRemoveFromFavourites, onAddToFavourites }} />
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <Table striped bordered condensed hover style={tableStyle.main}>
+      <Modal.Body style={tableStyle.modal}>
+        <Table bordered style={tableStyle.main}>
           <tbody>{
             Object.keys(MODAL_FIELDS).map(headerName => (
               <tr key={headerName}>

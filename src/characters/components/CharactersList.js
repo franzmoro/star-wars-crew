@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
-import Spinner from 'react-loader';
 import Character from './Character';
 import CharacterModal from './CharacterModal';
+import LoadingModal from './LoadingModal';
 import tableStyle from '../styles/table.style';
 import * as globalSelectors from '../../app/index.selectors';
 import * as charactersActionCreators from '../index.actionCreators';
@@ -86,8 +86,7 @@ class CharactersList extends Component {
     const showTable = Boolean(sortedCharacterIds.length);
     return (
       <div>
-        {isLoading && <p>Jumping to Hyperspace...</p>}
-        <Spinner loaded={!isLoading} />
+        {isLoading && <LoadingModal />}
         <CharacterModal
           {...characters[modalCharacterId]}
           isModalOpen={Boolean(modalCharacterId)}
@@ -105,7 +104,7 @@ class CharactersList extends Component {
             </div>
           )
           : (showTable &&
-            <Table striped bordered condensed hover style={tableStyle.main}>
+            <Table bordered style={tableStyle.main}>
               <thead>
                 <tr>
                   {HEADER_NAMES.map((headerName, index) => (

@@ -3,6 +3,9 @@ export default {
     width: '90%',
     margin: 'auto',
   },
+  modal: {
+    background: '#1B1A2C',
+  },
   th: {
     textAlign: 'center',
   },
@@ -11,6 +14,7 @@ export default {
   },
   td: {
     textIndent: '1%',
+    background: 'transparent',
   },
   tdContent: {
     margin: 'auto 0',
