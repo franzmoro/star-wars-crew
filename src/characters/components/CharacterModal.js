@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Modal, Button } from 'react-bootstrap';
 import FavouriteStar from './FavouriteStar';
+import tableStyle from '../styles/table.style';
 import { MODAL_FIELDS } from '../../index.constants';
 
 const CharacterModal = (props) => {
@@ -23,14 +24,16 @@ const CharacterModal = (props) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Table>{
-          Object.keys(MODAL_FIELDS).map(headerName => (
-            <tr key={headerName}>
-              <td><strong>{headerName}</strong></td>
-              <td>{props[MODAL_FIELDS[headerName]]}</td>
-            </tr>
-          ))
-        }</Table>
+        <Table striped bordered condensed hover style={tableStyle.main}>
+          <tbody>{
+            Object.keys(MODAL_FIELDS).map(headerName => (
+              <tr key={headerName}>
+                <td><strong>{headerName}</strong></td>
+                <td>{props[MODAL_FIELDS[headerName]]}</td>
+              </tr>
+            ))
+          }</tbody>
+        </Table>
 
       </Modal.Body>
       <Modal.Footer>

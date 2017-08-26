@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import FavouriteStar from './FavouriteStar';
+import tableStyle from '../styles/table.style';
+
 import { HEADER_NAMES, SORTING_DIMENSIONS } from '../../index.constants';
 
 const Character = (props) => {
@@ -19,15 +21,19 @@ const Character = (props) => {
 
   return (
     <tr>
-      <td>
+      <td style={tableStyle.td}>
         <FavouriteStar {...{ isFavourited, onRemoveFromFavourites, onAddToFavourites }} />
       </td>
       {characterProperties.map((field, idx) => (
-        <td key={`${field}-${idx}`}>{field}</td>
+        <td key={`${field}-${idx}`} style={tableStyle.td}>
+          {field}
+        </td>
       ))}
-      <Button bsStyle="primary" bsSize="small" onClick={onOpenModal}>
-        +
-      </Button>
+      <td style={tableStyle.td}>
+        <Button bsStyle="primary" bsSize="xsmall" onClick={onOpenModal} style={tableStyle.tdContent}>
+          +
+        </Button>
+      </td>
     </tr>
   );
 };

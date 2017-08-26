@@ -5,6 +5,7 @@ import { Table } from 'react-bootstrap';
 import Spinner from 'react-loader';
 import Character from './Character';
 import CharacterModal from './CharacterModal';
+import tableStyle from '../styles/table.style';
 import * as globalSelectors from '../../app/index.selectors';
 import * as charactersActionCreators from '../index.actionCreators';
 import * as preferencesActionCreators from '../../preferences/index.actionCreators';
@@ -104,13 +105,14 @@ class CharactersList extends Component {
             </div>
           )
           : (showTable &&
-            <Table striped bordered condensed hover>
+            <Table striped bordered condensed hover style={tableStyle.main}>
               <thead>
                 <tr>
                   {HEADER_NAMES.map((headerName, index) => (
-                    <th key={`header-item-${headerName}`}>
+                    <th key={`header-item-${headerName}`} style={tableStyle.th}>
                       {headerName}
                       <span
+                        style={tableStyle.sortingArrows}
                         role="menuitem"
                         tabIndex={index + 1}
                         className={this.getSortingIconClassName(headerName)}
@@ -119,6 +121,7 @@ class CharactersList extends Component {
                       />
                     </th>
                   ))}
+                  <th>View More</th>
                 </tr>
               </thead>
               <tbody>
