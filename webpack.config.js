@@ -5,16 +5,20 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { NODE_ENV } = process.env;
 const SOURCE_PATH = path.join(__dirname, './src');
 const PUBLIC_PATH = '/';
-const MINIFY_OPTIONS = (NODE_ENV === 'production') ? { minimize: true } : {};
 
 module.exports = () => {
   const plugins = [
     new HtmlWebpackPlugin({
       template: 'index.html',
     }),
-    new webpack.optimize.UglifyJsPlugin(MINIFY_OPTIONS),
     new webpack.HotModuleReplacementPlugin(),
   ];
+
+  if (NODE_ENV === 'production') {
+    plugins.push(
+      new webpack.optimize.UglifyJsPlugin({ minimize: true })
+    );
+  }
 
   return {
     context: SOURCE_PATH,
